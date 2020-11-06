@@ -5,9 +5,23 @@ pipeline {
         }
     }
     stages {
-        stage('Build') {
+        stage('Build smockin') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn -B clean package'
+            }
+        },
+        stage('Build docker') {
+            steps {
+                dir ("docker") {
+                    sh 'docker build -t registry.devfactory.com/devfactory/smockin-sandbox .'
+                }
+            }
+        }
+        stage('Publish docker image') {
+            steps {
+                dir ("docker") {
+                    sh 'docker push registry.devfactory.com/devfactory/smockin-sandbox'
+                }
             }
         }
     }
