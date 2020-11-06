@@ -52,7 +52,19 @@ Running successfully sMockin-sandbox requires:
 
 Hence, running docker can be like:
 
-docker run -d -p 8000:8000 -p 8001:8001 -v /tmp/data-for-smocking-sandbox:/app/sandbox-data/ registry.devfactory.com/devfactory/smockin-sandbox
+*docker run -d -p 8000:8000 -p 8001:8001 -v /tmp/data-for-smocking-sandbox:/app/sandbox-data/ registry.devfactory.com/devfactory/smockin-sandbox /bin/bash -c "/app/start-app.sh"*
 
-#### 
+#### Docker
 
+Docker image is created automatically during pipeline, but in case you want to do it by your own, pls execute it inside **docker** folder:
+
+*docker build -t registry.devfactory.com/devfactory/smockin-sandbox .*
+
+and then publish
+
+*docker push registry.devfactory.com/devfactory/smockin-sandbox*
+
+
+#### Using sMockin-sandbox in your project
+
+You can use sMocking-sandbox in your project as a standalon e
