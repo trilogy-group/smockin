@@ -1,4 +1,4 @@
+sh -c 'sleep 15; /app/import_smockin.sh'
+
 cd /app/smockin
-./run.sh
-sleep 30
-/app/import_smockin.sh
+./run.sh -CONSOLE

@@ -20,17 +20,12 @@ RUN yum install -y unixODBC-devel
 RUN pip install eng.pca-automation-e2e --extra-index-url https://nexus.devfactory.com/repository/eng-pca-qe-pypi-release/simple/
 
 # Install smockin
+RUN yum -y install net-tools
 RUN yum -y install maven
 RUN git clone https://github.com/trilogy-group/devfactory-aws-mocking-sandbox.git smockin && \
     cd smockin && \
     mvn clean install
 RUN cd /app/smockin && ./install.sh
 RUN cp /app/smockin-data/app.properties ~/.smockin/
-RUN cd /app/smockin && ./start.sh
-RUN sleep 30
-RUN  curl --location --request POST 'localhost:8001/mock/import' \
-    --header 'KeepExisting: false' \
-    --form 'file=@/app/sandbox-data/smockin_empty-aws_services.zip'
-RUN sleep 30 && cd /app/smockin && ./shutdown.sh
 
 

@@ -52,7 +52,7 @@ Running successfully sMockin-sandbox requires:
 
 Hence, running docker can be like:
 
-*docker run -d -p 8000:8000 -p 8001:8001 -v /tmp/data-for-smocking-sandbox:/app/sandbox-data/ registry.devfactory.com/devfactory/smockin-sandbox /bin/bash -c "/app/start-app.sh"*
+*docker run -di -p 8000:8000 -p 8001:8001 -v /tmp/data-for-smocking-sandbox:/app/sandbox-data/ registry.devfactory.com/devfactory/smockin-sandbox /bin/bash -c "/app/start-app.sh"*
 
 #### Docker
 
