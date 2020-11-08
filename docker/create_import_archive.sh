@@ -1,9 +1,12 @@
-output=rest_export.json
-zipFile=/app/sandbox-data/smockin-to-import.zip
+workingDir=/app/sandbox-data/
+output=$workingDir/rest_export.json
+zipFile=$workingDir/smockin-to-import.zip
+
+cd $workingDir
 
 echo "[" > $output
 firstMock=1
-for f in *aws-service-*.json ; do 
+for f in $workingDir/*aws-service-*.json ; do 
     if [ -f $f ] ; then 
         echo "Adding mocks from: $f"
         if [ $firstMock -eq 0 ]; then
