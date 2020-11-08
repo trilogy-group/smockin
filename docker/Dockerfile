@@ -27,5 +27,5 @@ RUN git clone https://github.com/trilogy-group/devfactory-aws-mocking-sandbox.gi
     mvn clean install
 RUN cd /app/smockin && ./install.sh
 RUN cp /app/smockin-data/app.properties ~/.smockin/
-RUN cp /app/smockin-data/smockin_db.mv.db ~/.smockin/db/data
+RUN mkdir -p ~/.smockin/db/data ; cp /app/smockin-data/smockin_db.mv.db ~/.smockin/db/data
 
