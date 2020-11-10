@@ -12,6 +12,7 @@ import com.smockin.admin.service.HttpClientService;
 import com.smockin.admin.service.utils.aws.AWS4Signer;
 import com.smockin.admin.service.utils.aws.AwsCredentialsProvider;
 import com.smockin.admin.service.utils.aws.AwsProfile;
+import com.smockin.admin.service.utils.aws.auth.AWS4SignerBase;
 import com.smockin.mockserver.dto.MockedServerConfigDTO;
 import com.smockin.mockserver.exception.InboundParamMatchException;
 import com.smockin.mockserver.service.*;
@@ -285,6 +286,10 @@ public class MockedRestServerEngineUtils {
                         (awsService != null ? awsService.toLowerCase() : ""),
                         awsProfile.getRegion()
                 );
+                if (httpClientCallDTO.getBody() != null
+                        && httpClientCallDTO.getBody().startsWith("Action=AssumeRole")) {
+                    AWS4Signer.removeHeader(httpClientCallDTO.getHeaders(), AWS4SignerBase.HEADER_X_AMZ_SECURITY_TOKEN);
+                }
                 AWS4Signer.removeHeader(httpClientCallDTO.getHeaders(), HEADER_X_SMOCKIN_AWS_SERVICE);
                 final String bodyHash = AWS4Signer.computeContentHash(httpClientCallDTO.getBody());
                 AWS4Signer.updateHeaderWithContentHash(httpClientCallDTO.getHeaders(), bodyHash);
