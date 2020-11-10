@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Check Java 8 is installed
-JAVA_FULL_VERSION=$(java -version 2>&1 | grep -i version | awk -F '"' '/version/ {print $2}')
-IFS='.' ; read -r major minor extra <<< "$JAVA_FULL_VERSION";
+java -version 2>&1 | grep -i version | awk -F '"' '/version/ {print $2}' > ./java.version
+IFS='.' ; read major minor extra < ./java.version
 
 if (( major == 1 )) ; then
     SMOCKIN_JAVA_VERSION=$minor
