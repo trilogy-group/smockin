@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class MockedRestServerEngineUtils {
 
+    private static final String AWS_SERVICE_PREFIX = "/aws-service-([a-zA-Z0-9]*).*";
     private final Logger logger = LoggerFactory.getLogger(MockedRestServerEngineUtils.class);
 
     private static final String HEADER_X_SMOCKIN_AWS_SERVICE = "x-smockin-aws-service";
@@ -278,9 +279,10 @@ public class MockedRestServerEngineUtils {
             try {
                 AwsProfile awsProfile = awsCredentialsProvider.getDefaultProfile();
                 final String awsAccessKey = determineAwsAccessKeyBasedOnRequest(httpClientCallDTO.getHeaders());
+                final String awsService = httpClientCallDTO.getHeaders().get(HEADER_X_SMOCKIN_AWS_SERVICE);
                 AWS4Signer aws4Signer = new AWS4Signer(awsAccessKey, awsCredentialsProvider.get(awsAccessKey),
                         new URL(httpClientCallDTO.getUrl()), httpClientCallDTO.getMethod().toString(),
-                        httpClientCallDTO.getHeaders().get(HEADER_X_SMOCKIN_AWS_SERVICE).toLowerCase(),
+                        (awsService != null ? awsService.toLowerCase() : ""),
                         awsProfile.getRegion()
                 );
                 AWS4Signer.removeHeader(httpClientCallDTO.getHeaders(), HEADER_X_SMOCKIN_AWS_SERVICE);
@@ -330,11 +332,16 @@ public class MockedRestServerEngineUtils {
         if (authHeader == null) {
             return false;
         }
-        final boolean isAwsService = authHeader.startsWith("AWS4-HMAC-SHA256 ");
-        if (isAwsService) {
-            logger.debug("AWS Service call detected for: " + httpClientCallDTO.getBody());
+        if (authHeader.startsWith("AWS4-HMAC-SHA256 ")) {
+            final Matcher serviceMatcher = Pattern.compile(AWS_SERVICE_PREFIX).matcher(httpClientCallDTO.getPathInfo());
+            if (serviceMatcher.find() && serviceMatcher.groupCount() >= 1) {
+                logger.debug("AWS Service call detected for: "
+                        + serviceMatcher.group(1) + ": " + httpClientCallDTO.getBody());
+
+                return true;
+            }
         }
-        return isAwsService;
+        return false;
     }
 
     String determineHeaderHostValue(boolean isAwsServiceCall, ProxyHeaderHostModeEnum proxyHeaderHostMode, HttpClientCallDTO httpClientCallDTO, String downstreamHost, String proxyFixedHeaderHost) {
@@ -347,7 +354,7 @@ public class MockedRestServerEngineUtils {
             case SMART:
                 if (isAwsServiceCall) {
                     final String pathInfo = httpClientCallDTO.getPathInfo();
-                    final Matcher serviceMatcher = Pattern.compile("/aws-service-([a-zA-Z0-9]*).*").matcher(pathInfo);
+                    final Matcher serviceMatcher = Pattern.compile(AWS_SERVICE_PREFIX).matcher(pathInfo);
                     final String awsService;
                     if (serviceMatcher.find() && serviceMatcher.groupCount() >= 1) {
                         awsService = serviceMatcher.group(1).toLowerCase();
