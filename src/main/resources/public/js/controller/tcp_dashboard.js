@@ -171,10 +171,11 @@ app.controller('tcpDashboardController', function($scope, $window, $rootScope, $
             if (alertResponse) {
                 var req = [mockToExport.extId];
                 restClient.doPost($http, '/mock/export-single/RESTFUL', req, function(status, data) {
-                    if (status != 200) {
+                    if (status !== 200) {
                         showAlert(globalVars.GeneralErrorMessage);
                         return;
                     }
+
                     handleSingleExportDownload(mockToExport, data);
                 });
             }
@@ -391,8 +392,6 @@ app.controller('tcpDashboardController', function($scope, $window, $rootScope, $
 
     }
 
-    //
-    // Internal Functions
     function handleSingleExportDownload(mock, exportData) {
 
         var iFrame = jQuery('#export-download-frame');
