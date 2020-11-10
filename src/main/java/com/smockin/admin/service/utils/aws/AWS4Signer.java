@@ -113,7 +113,7 @@ public class AWS4Signer extends AWS4SignerBase {
         headers.put(HEADER_X_AMZ_DATE, dateTimeStamp);
 
         // don't include the security token in computing
-        String x_amz_security_token = headers.remove(HEADER_X_AMZ_SECURITY_TOKEN);
+        String xAmzSecurityToken = headers.remove(HEADER_X_AMZ_SECURITY_TOKEN);
 
         // canonicalize the headers; we need the set of header names as well as the
         // names and values to go into the signature process
@@ -162,8 +162,8 @@ public class AWS4Signer extends AWS4SignerBase {
                 + signedHeadersAuthorizationHeader + ", "
                 + signatureAuthorizationHeader;
 
-        if (x_amz_security_token != null) {
-            headers.put(HEADER_X_AMZ_SECURITY_TOKEN, x_amz_security_token);
+        if (xAmzSecurityToken != null) {
+            headers.put(HEADER_X_AMZ_SECURITY_TOKEN, xAmzSecurityToken);
         }
         return authorizationHeader;
     }
