@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Check Java 8 is installed
 java -version 2>&1 | grep -i version | awk -F '"' '/version/ {print $2}' > ./java.version
