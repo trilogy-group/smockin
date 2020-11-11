@@ -480,10 +480,11 @@ public final class GeneralUtils {
         }
         try {
             JsonMapper mapper = new JsonMapper();
-            String json =  mapper.writerWithDefaultPrettyPrinter().writeValueAsString(deserialiseJson(jsonAsString));
-            return json;
+
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(deserialiseJson(jsonAsString));
         } catch (JsonProcessingException error) {
             logger.error("Can't process with pretty print format for given json, returning without reformatting", error);
+
             return jsonAsString;
         }
     }
