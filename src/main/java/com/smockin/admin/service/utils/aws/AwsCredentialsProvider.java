@@ -56,6 +56,10 @@ public class AwsCredentialsProvider {
     }
 
     public String getSecretKey(String awsAccessKey) {
+        if (!credentials.containsKey(awsAccessKey)) {
+            logger.debug("No credentials registered for: [" + awsAccessKey + "]");
+            return null;
+        }
         String awsSecretKey = credentials.get(awsAccessKey).getSecretKey();
         logger.debug("SecretKey for [" + awsAccessKey + "]: [" + awsSecretKey + "]");
         return awsSecretKey;
