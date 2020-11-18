@@ -111,10 +111,16 @@ public class MockedRestServerEngineUtils {
             if (mockedResponse != null && mockedResponse.startsWith("<AssumeRoleResponse ")) {
                 Pattern accessKeyPattern = Pattern.compile("<AccessKeyId>(.*)</AccessKeyId>");
                 Pattern secretKeyPattern = Pattern.compile("<SecretAccessKey>(.*)</SecretAccessKey>");
+                Pattern securityTokenPattern = Pattern.compile("<SessionToken>(.*)</SessionToken>");
                 Matcher accessKeyMatcher = accessKeyPattern.matcher(mockedResponse);
                 Matcher secretKeyMatcher = secretKeyPattern.matcher(mockedResponse);
-                if (accessKeyMatcher.find() && secretKeyMatcher.find()) {
-                    awsCredentialsProvider.add(accessKeyMatcher.group(1), secretKeyMatcher.group(1), null);
+                Matcher securityTokenMatcher = securityTokenPattern.matcher(mockedResponse);
+                if (accessKeyMatcher.find() && secretKeyMatcher.find() && securityTokenMatcher.find()) {
+                    awsCredentialsProvider.add(
+                            accessKeyMatcher.group(1),
+                            secretKeyMatcher.group(1),
+                            securityTokenMatcher.group(1)
+                            );
                 }
             }
         });
