@@ -88,6 +88,10 @@ public class MockedRestServerEngineUtils {
     @Autowired
     private AwsCredentialsProvider awsCredentialsProvider;
 
+    private static final Pattern ACCESS_KEY_PATTERN = Pattern.compile("<AccessKeyId>(.*)</AccessKeyId>");
+    private static final Pattern SECRET_KEY_PATTERN = Pattern.compile("<SecretAccessKey>(.*)</SecretAccessKey>");
+    private static final Pattern SECURITY_TOKEN_PATTERN = Pattern.compile("<SessionToken>(.*)</SessionToken>");
+
 
     public Optional<String> loadMockedResponse(final Request request,
                                                final Response response,
@@ -109,12 +113,9 @@ public class MockedRestServerEngineUtils {
                     mockedResponse + "\n" +
                     "===========================================================================");
             if (mockedResponse != null && mockedResponse.startsWith("<AssumeRoleResponse ")) {
-                Pattern accessKeyPattern = Pattern.compile("<AccessKeyId>(.*)</AccessKeyId>");
-                Pattern secretKeyPattern = Pattern.compile("<SecretAccessKey>(.*)</SecretAccessKey>");
-                Pattern securityTokenPattern = Pattern.compile("<SessionToken>(.*)</SessionToken>");
-                Matcher accessKeyMatcher = accessKeyPattern.matcher(mockedResponse);
-                Matcher secretKeyMatcher = secretKeyPattern.matcher(mockedResponse);
-                Matcher securityTokenMatcher = securityTokenPattern.matcher(mockedResponse);
+                Matcher accessKeyMatcher = ACCESS_KEY_PATTERN.matcher(mockedResponse);
+                Matcher secretKeyMatcher = SECRET_KEY_PATTERN.matcher(mockedResponse);
+                Matcher securityTokenMatcher = SECURITY_TOKEN_PATTERN.matcher(mockedResponse);
                 if (accessKeyMatcher.find() && secretKeyMatcher.find() && securityTokenMatcher.find()) {
                     awsCredentialsProvider.add(
                             accessKeyMatcher.group(1),
