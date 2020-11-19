@@ -71,7 +71,7 @@ public class AwsCredentialsProvider {
         return securityToken;
     }
 
-    private class ConnectivityDetails {
+    private static class ConnectivityDetails {
         private final String secretKey;
         private final String securityToken;
 
