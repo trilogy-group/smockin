@@ -12,7 +12,7 @@ import java.util.Map;
 public class AwsCredentialsProvider {
     private final static Logger logger = LoggerFactory.getLogger(AwsCredentialsProvider.class);
 
-    private final Map<String, ConnectivityDetails> credentials = new HashMap<>();
+    private final Map<String, AwsCredentials> credentials = new HashMap<>();
     private final AwsProfile defaultProfile;
 
     private static final String AWS_ACCESS_KEY_ID = "AWS_ACCESS_KEY_ID";
@@ -52,7 +52,7 @@ public class AwsCredentialsProvider {
 
     public final void add(String awsAccessKey, String awsSecretKey, String securityToken) {
         logger.debug("Storing new credentials: [" + awsAccessKey + "]: [" + awsSecretKey + "]");
-        credentials.put(awsAccessKey, new ConnectivityDetails(awsSecretKey, securityToken));
+        credentials.put(awsAccessKey, new AwsCredentials(awsSecretKey, securityToken));
     }
 
     public String getSecretKey(String awsAccessKey) {
@@ -71,11 +71,11 @@ public class AwsCredentialsProvider {
         return securityToken;
     }
 
-    private static class ConnectivityDetails {
+    private static class AwsCredentials {
         private final String secretKey;
         private final String securityToken;
 
-        public ConnectivityDetails(String secretKey, String securityToken) {
+        public AwsCredentials(String secretKey, String securityToken) {
             this.secretKey = secretKey;
             this.securityToken = securityToken;
         }
