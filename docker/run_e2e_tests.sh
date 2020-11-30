@@ -23,7 +23,7 @@ do
       >  $outdir/results/$ticket.status
       grep AWS $outdir/results/$ticket.status | cut -d',' -f2,4- >> $global_results
     fi
-done < /tmp/smockin_export/e2e-tickets.txt
+done < /tmp/sandbox/e2e-tickets.txt
 
 cat $global_results
 
